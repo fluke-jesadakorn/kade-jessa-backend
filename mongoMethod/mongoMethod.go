@@ -29,7 +29,6 @@ func Get(c *gin.Context) {
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
 	}
-
 	uri := os.Getenv("MONGODB_URI")
 	if uri == "" {
 		log.Fatal("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")
@@ -59,20 +58,14 @@ func Get(c *gin.Context) {
 	}
 
 	var results []Form
-
 	for cursor.Next(context.TODO()) {
-		//Create a value into which the single document can be decoded
 		var elem Form
 		err := cursor.Decode(&elem)
 		if err != nil {
 			log.Fatal(err)
 		}
-
 		results = append(results, elem)
-
 	}
-
-	fmt.Printf("Found multiple documents: %+v\n", results)
 
 	c.JSON(http.StatusOK, results)
 }

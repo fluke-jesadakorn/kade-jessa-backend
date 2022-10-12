@@ -46,24 +46,25 @@ func getBooks(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		// AllowOrigins:  []string{"http://localhost:3000", "http://localhost:3000/admin"},
-		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE"},
-		AllowHeaders:    []string{"Access-Control-Allow-Headers", "Authentication"},
-		AllowWildcard:   true,
-		AllowAllOrigins: true,
+		AllowOrigins:  []string{"http://localhost:3000"},
+		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:  []string{"Access-Control-Allow-Headers"},
+		AllowWildcard: true,
+		// AllowAllOrigins:  true,
+		AllowCredentials: true,
 	}))
 
 	router.GET("/", mongoMethod.Get)
 
 	adminRoute := router.Group("/admin", firebaseAdmin.VerifyIDToken)
 	{
-
-		adminRoute.GET("/", mongoMethod.Get)
+		adminRoute.GET("/post", mongoMethod.Get)
+		adminRoute.POST("/login", firebaseAdmin.Login)
 	}
 
 	userRoute := router.Group("/user")
 	{
-		userRoute.POST("/login", firebaseAdmin.VerifyIDToken)
+		userRoute.POST("/login", firebaseAdmin.Login)
 	}
 
 	router.POST("/upload", cloudbucket.UploadToBucket)
