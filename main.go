@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"kade-jessa/cloudbucket"
+	firebaseAdmin "kade-jessa/firebaseInit"
 	"kade-jessa/mongoMethod"
 
 	"github.com/gin-contrib/cors"
@@ -45,11 +46,25 @@ func getBooks(c *gin.Context) {
 func main() {
 	router := gin.Default()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins: []string{"http://localhost:3000"},
-		AllowMethods: []string{"GET", "POST", "PUT"},
+		// AllowOrigins:  []string{"http://localhost:3000", "http://localhost:3000/admin"},
+		AllowMethods:    []string{"GET", "POST", "PUT", "DELETE"},
+		AllowHeaders:    []string{"Access-Control-Allow-Headers", "Authentication"},
+		AllowWildcard:   true,
+		AllowAllOrigins: true,
 	}))
 
 	router.GET("/", mongoMethod.Get)
+
+	adminRoute := router.Group("/admin", firebaseAdmin.VerifyIDToken)
+	{
+
+		adminRoute.GET("/", mongoMethod.Get)
+	}
+
+	userRoute := router.Group("/user")
+	{
+		userRoute.POST("/login", firebaseAdmin.VerifyIDToken)
+	}
 
 	router.POST("/upload", cloudbucket.UploadToBucket)
 
