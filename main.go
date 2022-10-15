@@ -55,19 +55,20 @@ func main() {
 	}))
 
 	router.GET("/", mongoMethod.Get)
+	router.POST("/admin/login", firebaseAdmin.Login)
 
+	//Admin Protect
 	adminRoute := router.Group("/admin", firebaseAdmin.VerifyIDToken)
 	{
 		adminRoute.GET("/post", mongoMethod.Get)
-		adminRoute.POST("/login", firebaseAdmin.Login)
+		adminRoute.POST("/upload", cloudbucket.UploadToBucket)
 	}
 
+	//User Protect
 	userRoute := router.Group("/user")
 	{
 		userRoute.POST("/login", firebaseAdmin.Login)
 	}
-
-	router.POST("/upload", cloudbucket.UploadToBucket)
 
 	router.Run(":8080")
 

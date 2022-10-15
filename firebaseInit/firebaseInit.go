@@ -2,7 +2,6 @@ package firebaseAdmin
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -51,8 +50,6 @@ func VerifyIDToken(c *gin.Context) {
 
 	cookie, err := c.Cookie("auth")
 
-	fmt.Println("cookies ==> " + cookie)
-
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Session Expires",
@@ -62,12 +59,11 @@ func VerifyIDToken(c *gin.Context) {
 	app := FirebaseInit()
 	client, err := app.Auth(ctx)
 
-	token, err := client.VerifySessionCookie(ctx, cookie)
-	if err != nil {
+	token, _ := client.VerifySessionCookie(ctx, cookie)
+	if token == nil {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"message": "Unauthorized",
 		})
 	}
-	fmt.Println(token)
 	c.Next()
 }

@@ -31,7 +31,7 @@ func uploadByFile(c *gin.Context, file *multipart.FileHeader) string {
 	var err error
 
 	ctx := appengine.NewContext(c.Request)
-	storageClient, err = storage.NewClient(ctx, option.WithCredentialsFile("keys.json"))
+	storageClient, err = storage.NewClient(ctx, option.WithCredentialsFile("firebase-admin-keys.json"))
 
 	if err != nil {
 		fmt.Println("Key error")
