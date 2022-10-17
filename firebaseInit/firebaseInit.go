@@ -39,7 +39,7 @@ func Login(c *gin.Context) {
 
 	expiresIn := time.Hour * 24 * 5
 	cookie, err := client.SessionCookie(ctx, accessToken.IDToken, expiresIn)
-	c.SetCookie("auth", cookie, int(expiresIn.Seconds()), "/", "http://localhost:3000", true, true)
+	c.SetCookie("auth", cookie, int(expiresIn.Seconds()), "/", c.Request.Host, true, true)
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Set Cookies Success",
 	})
