@@ -72,17 +72,18 @@ func Get(c *gin.Context) {
 
 func GetProduct(c *gin.Context) {
 
-	id, has := c.Params.Get("id")
+	title, has := c.Params.Get("title")
 	if has != true {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": "Bad Request",
 		})
 	}
 
-	convertedID, err := primitive.ObjectIDFromHex(id)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// convertedID, err := primitive.ObjectIDFromHex(id)
+
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")
@@ -111,7 +112,7 @@ func GetProduct(c *gin.Context) {
 
 	var result Form
 
-	coll.FindOne(context.TODO(), bson.D{{Key: "_id", Value: convertedID}}, findOptions).Decode(&result)
+	coll.FindOne(context.TODO(), bson.D{{Key: "title", Value: title}}, findOptions).Decode(&result)
 
 	fmt.Println(result)
 

@@ -26,7 +26,7 @@ func main() {
 
 	//Public
 	router.GET("/", mongoMethod.Get)
-	router.GET("/products/:id", mongoMethod.GetProduct)
+	router.GET("/products/:title", mongoMethod.GetProduct)
 	router.POST("/admin/login", firebaseAdmin.Login)
 
 	//Admin Protect
