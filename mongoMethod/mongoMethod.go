@@ -70,7 +70,7 @@ func Get(c *gin.Context) {
 	c.JSON(http.StatusOK, results)
 }
 
-func GetProduct(c *gin.Context) {
+func GetProductByName(c *gin.Context) {
 
 	title, has := c.Params.Get("title")
 	if has != true {
@@ -113,6 +113,59 @@ func GetProduct(c *gin.Context) {
 	var result Form
 
 	coll.FindOne(context.TODO(), bson.D{{Key: "title", Value: title}}, findOptions).Decode(&result)
+
+	fmt.Println(result)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	c.JSON(http.StatusOK, result)
+}
+
+func GetProductByID(c *gin.Context) {
+
+	id, has := c.Params.Get("id")
+	if has != true {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": "Bad Request",
+		})
+	}
+
+	convertedID, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	if err := godotenv.Load(); err != nil {
+		log.Println("No .env file found")
+	}
+	uri := os.Getenv("MONGODB_URI")
+	if uri == "" {
+		log.Fatal("You must set your 'MONGODB_URI' environmental variable. See\n\t https://www.mongodb.com/docs/drivers/go/current/usage-examples/#environment-variable")
+	}
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(uri))
+	if err != nil {
+		panic(err)
+	}
+	defer func() {
+		if err := client.Disconnect(context.TODO()); err != nil {
+			panic(err)
+		}
+	}()
+
+	var db string = os.Getenv("MONGO_DATABASE")
+	var collction string = os.Getenv("MONGO_COLLECTION")
+
+	coll := client.Database(db).Collection(collction)
+
+	findOptions := options.FindOne()
+	// findOptions.SetLimit(5)
+
+	var result Form
+
+	coll.FindOne(context.TODO(), bson.D{{Key: "_id", Value: convertedID}}, findOptions).Decode(&result)
 
 	fmt.Println(result)
 
