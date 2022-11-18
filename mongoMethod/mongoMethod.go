@@ -22,6 +22,7 @@ type Form struct {
 	Description string   `bson:"description"`
 	Hashtags    []string `bson:"hashtags"`
 	Images      []string `bson:"images"`
+	Price       []string `bson:"int"`
 }
 
 func Get(c *gin.Context) {
