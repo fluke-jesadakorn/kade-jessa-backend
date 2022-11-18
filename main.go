@@ -16,7 +16,7 @@ func main() {
 	gin.SetMode(gin.DebugMode)
 	router := gin.New()
 	router.Use(cors.New(cors.Config{
-		AllowOrigins:  []string{"http://localhost:3000", "http://www.kadejessa.com"},
+		AllowOrigins:  []string{"http://localhost:3000", "https://www.kadejessa.com", "https://kadejessa.com"},
 		AllowMethods:  []string{"GET", "POST", "PUT", "DELETE"},
 		AllowHeaders:  []string{"Access-Control-Allow-Headers"},
 		AllowWildcard: true,
