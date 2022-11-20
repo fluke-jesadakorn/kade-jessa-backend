@@ -22,10 +22,10 @@ type Form struct {
 	Description string   `bson:"description"`
 	Hashtags    []string `bson:"hashtags"`
 	Images      []string `bson:"images"`
-	Price       []string `bson:"int"`
+	Price       int32    `bson:"price"`
 }
 
-func Get(c *gin.Context) {
+func GetProducts(c *gin.Context) {
 
 	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found")

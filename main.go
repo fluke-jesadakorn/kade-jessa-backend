@@ -25,7 +25,7 @@ func main() {
 	}))
 
 	//Public
-	router.GET("/", mongoMethod.Get)
+	router.GET("/", mongoMethod.GetProducts)
 	router.GET("/products/name/:title", mongoMethod.GetProductByName)
 	router.GET("/products/id/:id", mongoMethod.GetProductByID)
 	router.POST("/admin/login", firebaseAdmin.Login)
@@ -33,7 +33,7 @@ func main() {
 	//Admin Protect
 	adminRoute := router.Group("/admin", firebaseAdmin.VerifyIDToken)
 	{
-		adminRoute.GET("/post", mongoMethod.Get)
+		adminRoute.GET("/post", mongoMethod.GetProducts)
 		adminRoute.POST("/upload", cloudbucket.UploadToBucket)
 	}
 
